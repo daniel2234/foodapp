@@ -96,22 +96,25 @@ struct BasicTextImageRow: View {
                 Image(systemName: "heart.fill").foregroundColor(.yellow)
             }
         }
-        .onTapGesture {
-            showOptions.toggle()
-        }
-        .actionSheet(isPresented: $showOptions) {
-            ActionSheet(title: Text("What do you want to do?"),
-                        message: nil,
-                        buttons:[
-                            .default(Text("Reserve a Table")) {
-                                let _ = print(self)
-                                self.showError.toggle()
-                            },
-                            .default(Text("Mark as Favourite")) {
-                                self.restaurant.isFavorite.toggle()
-                            },
-                            .cancel()
-                        ])
+        .contextMenu {
+            Button {
+                self.showError.toggle()
+            } label: {
+                HStack {
+                    Text("Reserve a Table")
+                    Image(systemName: "phone")
+                }
+            }
+            
+            Button {
+                self.restaurant.isFavorite.toggle()
+            } label: {
+                HStack {
+                    Text(restaurant.isFavorite ? "Remove from favourites" : "Mark as favourite")
+                    Image(systemName: "heart")
+                }
+            }
+
         }.alert(isPresented: $showError) {
             Alert(title: Text("Not yet available"),
                   message: Text("Sorry, this feature is not available yet"),
